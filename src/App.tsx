@@ -1,35 +1,30 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import Scanner from './components/Scanner';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [scanning, setScanning] = useState(false);
+  const [code, setCode] = useState("");
 
   return (
-    <>
-      <div>
-        <h1 className="text-2xl font-bold text-center">Liburutegi</h1>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="min-h-screen bg-slate-100 p-4">
+      <h1 className="text-2xl font-bold mb-4">📚 Kids Library</h1>
+      <p>Scan a book to add it to your library</p>
+      <button className="bg-[#4CAF50] text-white" onClick={() => setScanning(true)}>📷 Scan Book</button>
+      <button className="bg-[#f44336] text-white">🧹 Clear Library</button>
+      {scanning && (
+        <Scanner
+          onDetected={(isbn) => {
+            console.log("Detected ISBN:", isbn);
+            setScanning(false);
+            setCode(isbn);
+          }}
+          onClose={() => setScanning(false)}
+        />
+      )}
+      <div>{code}</div>
+      <h2>Your Books</h2>
+      <ul id="bookList"></ul>
+    </div>
   )
 }
 
