@@ -6,19 +6,18 @@ interface ScannerProps {
   onClose?: () => void;
 }
 
-export default function Scanner({ onDetected, onClose }: ScannerProps) {
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const streamRef = useRef<MediaStream | null>(null);
+type ScannerState = {
+  stream: MediaStream | null;
+  error: string | null;
+};
 
-  const [error, setError] = useState<string | null>(null);
+function useScanner(onDetected: (isbn: string) => void, videoRef: React.RefObject<HTMLVideoElement | null>) {
+  const [state, setState] = useState<ScannerState>({
+    stream: null,
+    error: null,
+  });
 
-  useEffect(() => {
-    startCamera();
-    return stopCamera;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  async function startCamera() {
+  const startCamera = async () => {
     try {
       const devices = await navigator.mediaDevices.enumerateDevices();
       const videoDevices = devices.filter(d => d.kind === "videoinput");
@@ -34,37 +33,27 @@ export default function Scanner({ onDetected, onClose }: ScannerProps) {
         video: { deviceId: backCamera?.deviceId },
       });
 
-      streamRef.current = stream;
-
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        await videoRef.current.play();
-      }
+      setState(prevState => ({
+        ...prevState,
+        stream,
+      }));
 
       startDetection();
     } catch (err: any) {
-      setError(err?.name || "Camera access failed");
+      setState(prevState => ({
+        ...prevState,
+        error: err?.name || "Camera access failed",
+      }));
       console.error(err);
     }
+  };
+  const stopCamera = () => {
+    state.stream?.getTracks().forEach((t) => t.stop());
   }
 
-  function stopCamera() {
-    streamRef.current?.getTracks().forEach((t) => t.stop());
-  }
-
-  function startDetection() {
-    if (!videoRef.current) return;
-
-    if ("BarcodeDetector" in window) {
-      startNativeDetection();
-    } else {
-      setError("BarcodeDetector not supported");
-    }
-  }
-
-  async function startNativeDetection() {
+  async function startDetection() {
     const detector = new NativeBarcodeDetector();
-    detector.startDetection(videoRef.current!, handleDetected, setError);
+    detector.startDetection(videoRef.current!, handleDetected, error => setState(prevState => ({ ...prevState, error })));
   }
 
   function handleDetected(isbn: string) {
@@ -72,9 +61,31 @@ export default function Scanner({ onDetected, onClose }: ScannerProps) {
     onDetected(isbn);
   }
 
-  // -------------------------------
-  // UI
-  // -------------------------------
+  return {
+    startCamera,
+    stopCamera,
+    stream: state.stream,
+    error: state.error,
+  };
+}
+
+export default function Scanner({ onDetected, onClose }: ScannerProps) {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  const { startCamera, stopCamera, error, stream } = useScanner(onDetected, videoRef);
+
+  useEffect(() => {
+    startCamera();
+    return stopCamera;
+  }, []);
+
+  useEffect(() => {
+    if (stream && videoRef.current) {
+      videoRef.current.srcObject = stream;
+      videoRef.current.play();
+    }
+  }, [stream]);
+
   return (
     <div className="fixed inset-0 bg-black flex flex-col items-center justify-center z-50">
       <div className="relative w-full h-full bg-black">
