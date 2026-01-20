@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react'
 import Scanner from './components/Scanner';
+import MultiSourceProvider from './infrastructure/multisource.provider';
+import OpenLibraryProvider from './infrastructure/openlibrary.provider';
+import GoogleBooksProvider from './infrastructure/googlebooks.provider';
 
 function App() {
   const [scanning, setScanning] = useState(false);
@@ -27,10 +30,19 @@ function App() {
       <button className="bg-[#f44336] text-white">🧹 Clear Library</button>
       {scanning && (
         <Scanner
-          onDetected={(isbn) => {
+          onDetected={async (isbn) => {
             console.log("Detected ISBN:", isbn);
             setScanning(false);
             setCode(isbn);
+            const multiSourceProvider = new MultiSourceProvider([
+              new OpenLibraryProvider(),
+              new GoogleBooksProvider(),
+            ]);
+            const book = await multiSourceProvider.findBook(isbn);
+            if (book) {
+              console.log("Found book:", book);
+              setCode(JSON.stringify(book.toPrimitive()));
+            }
           }}
           onClose={() => setScanning(false)}
         />
