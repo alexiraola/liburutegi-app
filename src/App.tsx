@@ -38,7 +38,8 @@ function App() {
               new OpenLibraryProvider(),
               new GoogleBooksProvider(),
             ]);
-            const book = await multiSourceProvider.findBook(isbn);
+
+            const book = await multiSourceProvider.findBook(isbn, Date.now());
             if (book) {
               console.log("Found book:", book);
               setCode(JSON.stringify(book.toPrimitive()));
