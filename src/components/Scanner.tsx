@@ -1,9 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  BrowserMultiFormatReader,
-  DecodeHintType,
-  BarcodeFormat,
-} from "@zxing/library";
+import { NativeBarcodeDetector } from "@/barcode/detector.native";
 
 interface ScannerProps {
   onDetected: (isbn: string) => void;
@@ -13,7 +9,6 @@ interface ScannerProps {
 export default function Scanner({ onDetected, onClose }: ScannerProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  const zxingRef = useRef<BrowserMultiFormatReader | null>(null);
 
   const [error, setError] = useState<string | null>(null);
 
@@ -55,79 +50,21 @@ export default function Scanner({ onDetected, onClose }: ScannerProps) {
 
   function stopCamera() {
     streamRef.current?.getTracks().forEach((t) => t.stop());
-    zxingRef.current?.reset();
   }
 
-  // -------------------------------
-  // Detection logic
-  // -------------------------------
   function startDetection() {
     if (!videoRef.current) return;
 
     if ("BarcodeDetector" in window) {
       startNativeDetection();
     } else {
-      startZXingDetection();
+      setError("BarcodeDetector not supported");
     }
   }
 
-  // -------------------------------
-  // Native BarcodeDetector (best)
-  // -------------------------------
   async function startNativeDetection() {
-    try {
-      // @ts-ignore
-      const formats = await window.BarcodeDetector.getSupportedFormats();
-      if (!formats.includes("ean_13")) {
-        throw new Error("EAN-13 not supported");
-      }
-
-      // @ts-ignore
-      const detector = new window.BarcodeDetector({
-        formats: ["ean_13"],
-      });
-
-      const detectLoop = async () => {
-        if (!videoRef.current) return;
-
-        try {
-          const barcodes = await detector.detect(videoRef.current);
-          if (barcodes.length) {
-            const isbn = barcodes[0].rawValue;
-            handleDetected(`Native: ${isbn}`);
-            return;
-          }
-        } catch { }
-
-        requestAnimationFrame(detectLoop);
-      };
-
-      detectLoop();
-    } catch {
-      startZXingDetection();
-    }
-  }
-
-  // -------------------------------
-  // ZXing fallback
-  // -------------------------------
-  function startZXingDetection() {
-    const hints = new Map();
-    hints.set(DecodeHintType.POSSIBLE_FORMATS, [
-      BarcodeFormat.EAN_13,
-    ]);
-
-    const reader = new BrowserMultiFormatReader(hints, 300);
-
-    zxingRef.current = reader;
-
-    reader.decodeFromVideoElement(videoRef.current!).then(result => {
-      if (result) {
-        handleDetected(result.getText());
-      }
-    }, err => {
-      console.error(err);
-    });
+    const detector = new NativeBarcodeDetector();
+    detector.startDetection(videoRef.current!, handleDetected, setError);
   }
 
   function handleDetected(isbn: string) {
