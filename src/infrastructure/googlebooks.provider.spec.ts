@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import GoogleBooksProvider from './googlebooks.provider';
 
 describe('GoogleBooksProvider Integration Tests', () => {
@@ -34,11 +34,44 @@ describe('GoogleBooksProvider Integration Tests', () => {
     expect(bookData.addedAt).toBe(timestamp);
   });
 
+  it('should parse title and author correctly for known book', async () => {
+    const provider = new GoogleBooksProvider();
+
+    const book = await provider.findBook('9780241705599');
+
+    expect(book).not.toBeNull();
+    const bookData = book!.toPrimitive();
+    expect(bookData.title).toBe('Plantas de interior');
+    expect(bookData.author).toBe('Fran Bailey');
+  });
+
   it('should handle malformed ISBN gracefully', async () => {
     const provider = new GoogleBooksProvider();
 
     const book = await provider.findBook('invalid-isbn');
 
     expect(book).toBeNull();
+  });
+
+  it('should use "Unknown author" when author is missing', async () => {
+    vi.stubGlobal('fetch', vi.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve({
+          totalItems: 1,
+          items: [{
+            volumeInfo: {
+              title: 'Test Book',
+            }
+          }]
+        })
+      })
+    ));
+
+    const provider = new GoogleBooksProvider();
+    const book = await provider.findBook('1234567890');
+
+    expect(book).not.toBeNull();
+    const bookData = book!.toPrimitive();
+    expect(bookData.author).toBe('Unknown author');
   });
 });
