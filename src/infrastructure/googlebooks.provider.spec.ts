@@ -73,5 +73,29 @@ describe('GoogleBooksProvider Integration Tests', () => {
     expect(book).not.toBeNull();
     const bookData = book!.toPrimitive();
     expect(bookData.author).toBe('Unknown author');
+
+    vi.unstubAllGlobals();
+  });
+
+  it('should extract cover image from Google Books response', async () => {
+    const provider = new GoogleBooksProvider();
+
+    const book = await provider.findBook('9780596004977');
+
+    expect(book).not.toBeNull();
+    const bookData = book!.toPrimitive();
+    expect(bookData.coverImage).toBeDefined();
+    expect(bookData.coverImage).toContain('books.google.com/books/content');
+    expect(bookData.coverImage).toContain('img=1');
+  });
+
+  it('should have undefined cover when Google Books has no cover', async () => {
+    const provider = new GoogleBooksProvider();
+
+    const book = await provider.findBook('9780241705599');
+
+    expect(book).not.toBeNull();
+    const bookData = book!.toPrimitive();
+    expect(bookData.coverImage).toBeUndefined();
   });
 });

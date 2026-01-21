@@ -15,7 +15,8 @@ export default class GoogleBooksProvider implements BookProvider {
           isbn,
           info.title,
           info.authors?.[0] ?? "Unknown author",
-          addedAt ?? Date.now()
+          addedAt ?? Date.now(),
+          info.imageLinks?.thumbnail
         );
       }
       return null;
