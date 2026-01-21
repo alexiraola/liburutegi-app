@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import OpenLibraryProvider from './openlibrary.provider';
 
 describe('OpenLibraryProvider Integration Tests', () => {
@@ -40,5 +40,24 @@ describe('OpenLibraryProvider Integration Tests', () => {
     const book = await provider.findBook('invalid-isbn');
 
     expect(book).toBeNull();
+  });
+
+  it('should use "Unknown author" when author is missing', async () => {
+    vi.stubGlobal('fetch', vi.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve({
+          docs: [{
+            title: 'Test Book',
+          }]
+        })
+      })
+    ));
+
+    const provider = new OpenLibraryProvider();
+    const book = await provider.findBook('1234567890');
+
+    expect(book).not.toBeNull();
+    const bookData = book!.toPrimitive();
+    expect(bookData.author).toBe('Unknown author');
   });
 });
