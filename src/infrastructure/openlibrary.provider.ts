@@ -10,11 +10,17 @@ export default class OpenLibraryProvider implements BookProvider {
       const data = await res.json();
 
       if (data.docs?.length) {
+        const doc = data.docs[0];
+        const coverImage = doc.cover_i
+          ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-S.jpg`
+          : undefined;
+
         return Book.create(
           isbn,
-          data.docs[0].title,
-          data.docs[0].author_name?.[0] ?? "Unknown author",
-          addedAt ?? Date.now()
+          doc.title,
+          doc.author_name?.[0] ?? "Unknown author",
+          addedAt ?? Date.now(),
+          coverImage
         );
       }
       return null;

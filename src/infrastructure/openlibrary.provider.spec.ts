@@ -59,5 +59,28 @@ describe('OpenLibraryProvider Integration Tests', () => {
     expect(book).not.toBeNull();
     const bookData = book!.toPrimitive();
     expect(bookData.author).toBe('Unknown author');
+
+    vi.unstubAllGlobals();
+  });
+
+  it('should extract cover image from OpenLibrary response', async () => {
+    const provider = new OpenLibraryProvider();
+
+    const book = await provider.findBook('9780743273565');
+
+    expect(book).not.toBeNull();
+    const bookData = book!.toPrimitive();
+    expect(bookData.coverImage).toBeDefined();
+    expect(bookData.coverImage).toBe('https://covers.openlibrary.org/b/id/10590366-S.jpg');
+  });
+
+  it('should have undefined cover when OpenLibrary has no cover', async () => {
+    const provider = new OpenLibraryProvider();
+
+    const book = await provider.findBook('9780553562699');
+
+    expect(book).not.toBeNull();
+    const bookData = book!.toPrimitive();
+    expect(bookData.coverImage).toBeUndefined();
   });
 });
