@@ -40,4 +40,8 @@ export default class IdbRepository implements BookRepository {
   async clearBooks(): Promise<void> {
     await this.db.clear("books");
   }
+
+  async deleteBook(isbn: string): Promise<void> {
+    await this.db.delete("books", isbn);
+  }
 }
