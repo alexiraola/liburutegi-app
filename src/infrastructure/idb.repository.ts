@@ -9,6 +9,7 @@ interface Liburutegia extends DBSchema {
       title: string;
       author: string;
       addedAt: number;
+      coverImage?: string;
     };
     key: string;
   };
@@ -33,7 +34,7 @@ export default class IdbRepository implements BookRepository {
 
   async getBooks(): Promise<Book[]> {
     const books = await this.db.getAll("books");
-    return books.map((book) => Book.create(book.isbn, book.title, book.author, book.addedAt));
+    return books.map((book) => Book.create(book.isbn, book.title, book.author, book.addedAt, book.coverImage));
   }
 
   async clearBooks(): Promise<void> {
