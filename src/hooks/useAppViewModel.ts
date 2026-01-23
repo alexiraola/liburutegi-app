@@ -71,9 +71,7 @@ export function useAppViewModel() {
           showError(`Errorea liburua gordetzean: "${book.toPrimitive().title}"`);
         }
       } else {
-        // Book not found - provide more helpful error
-        const isbnShort = isbn.length > 10 ? isbn.substring(0, 10) + '...' : isbn;
-        showError(`Ez dago libururik honako ISBNarekin: ${isbnShort}. Egiaztatu kodea eta saiatu berriro.`);
+        showError(`Ez dago libururik honako ISBNarekin: ${isbn}. Egiaztatu kodea eta saiatu berriro.`);
       }
     } catch (error) {
       console.error("Error during book lookup:", error);
@@ -132,12 +130,6 @@ export function useAppViewModel() {
     }
   }
 
-  const bookCount = () => {
-    if (books.length === 0) return null;
-    if (books.length === 1) return "Liburu bat";
-    return `${books.length} liburu`;
-  };
-
   const isLoading = isSearching || isAddingBook;
 
   return {
@@ -150,11 +142,10 @@ export function useAppViewModel() {
     isSearching,
     isAddingBook,
     toasts,
-    
+
     // Computed
     isLoading,
-    bookCount,
-    
+
     // Actions
     handleScanDetected,
     handleDeleteBook,
