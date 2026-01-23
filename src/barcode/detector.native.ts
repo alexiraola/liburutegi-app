@@ -21,7 +21,7 @@ export class NativeBarcodeDetector implements BarcodeDetector {
           const barcodes = await detector.detect(video);
           if (barcodes.length) {
             const isbn = barcodes[0].rawValue;
-            onDetect(`Native: ${isbn}`);
+            onDetect(isbn);
             return;
           }
         } catch { }
