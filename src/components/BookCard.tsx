@@ -9,7 +9,7 @@ export default function BookCard({ book, onDelete }: BookCardProps) {
   const bookData = book.toPrimitive();
 
   return (
-    <div className="flex gap-4 bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-all sm:flex-col sm:gap-3">
+    <div className="flex gap-3 bg-white rounded-xl shadow-sm p-2 hover:shadow-md transition-all sm:flex-col gap-2">
       <div className="flex-shrink-0 w-24 h-36 sm:w-32 sm:h-44 bg-gray-200 rounded-lg overflow-hidden mx-auto sm:mx-0">
         {bookData.coverImage ? (
           <img

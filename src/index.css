@@ -28,23 +28,6 @@ body {
   text-align: center;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 10px;
-  border: none;
-  padding: 0.6em 1em;
-  margin: 0.5em;
-  font-size: 1.2em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #4CAF50;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;

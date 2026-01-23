@@ -62,30 +62,36 @@ function App() {
     }
   }
 
+  const bookCount = () => {
+    if (books.length === 0) return "Ez dago libururik";
+    if (books.length === 1) return "Liburu bat";
+    return `${books.length} liburu`;
+  };
+
   return (
     <div className="min-h-screen bg-slate-100 pb-24 sm:pb-20">
       <header className="container mx-auto px-4 py-6 sm:p-4">
         <div className="max-w-2xl mx-auto">
-          <h1 className="text-3xl font-bold text-slate-800 sm:text-2xl">Kids Library</h1>
-          <p className="text-slate-600 mt-1 text-sm sm:text-base">Scan books to build your library</p>
+          <h1 className="text-4xl font-bold text-slate-800">Nire liburutegia</h1>
+          <p className="text-slate-600 mt-1 text-base sm:text-base">Harrapatu zure liburuen kodeak eta zerrendan azalduko dira</p>
 
           <div className="mt-4 flex items-center justify-between sm:gap-4">
-            <span className="text-slate-700 font-medium px-4">
-              {books.length} book{books.length !== 1 ? 's' : ''}
+            <span className="text-slate-700 font-medium px-2">
+              {bookCount()}
             </span>
             {books.length > 0 && (
               <button
                 onClick={handleClearAll}
                 className="px-3 py-1 text-sm text-red-600 bg-red-50 rounded-full hover:bg-red-100 transition-colors"
               >
-                Clear all
+                Ezabatu denak
               </button>
             )}
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-6 sm:py-4">
+      <main className="container mx-auto px-4 py-4 sm:py-4">
         <div className="max-w-2xl mx-auto">
           <BookList
             books={books}
@@ -99,17 +105,25 @@ function App() {
           onClick={() => supportedDetector && setScanning(true)}
           disabled={!supportedDetector}
           className={`
-            w-20 h-20 rounded-full shadow-lg flex items-center justify-center text-2xl
-            transition-all active:scale-95 sm:w-16 sm:h-16 sm:text-3xl
+            w-20 h-20 rounded-full shadow-xl bg-white
+            flex items-center justify-center text-slate-700
+            transition-all active:scale-95
+            sm:w-16 sm:h-16
             ${supportedDetector
-              ? 'bg-gradient-to-br from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 shadow-green-500/25'
-              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              ? 'hover:border-slate-400 hover:bg-slate-50 hover:shadow-md'
+              : 'border-slate-200 bg-slate-100 text-slate-400 cursor-not-allowed'
             }
           `}
-          aria-label="Scan book"
+          aria-label="Scan book barcode"
         >
-          <svg className="w-8 h-8 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2L7 4m0 0h4M5 8v8m0 0v4m0-4h4m8 0h4m-4 0v4m0-4h-4" />
+          <svg className="w-8 h-8 sm:w-7 sm:h-7" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="4" width="2" height="16" rx="0.5" fill="currentColor" />
+            <rect x="6" y="4" width="1" height="16" rx="0.5" fill="currentColor" />
+            <rect x="8" y="4" width="2" height="16" rx="0.5" fill="currentColor" />
+            <rect x="11" y="4" width="1" height="16" rx="0.5" fill="currentColor" />
+            <rect x="13" y="4" width="3" height="16" rx="0.5" fill="currentColor" />
+            <rect x="17" y="4" width="1" height="16" rx="0.5" fill="currentColor" />
+            <rect x="19" y="4" width="2" height="16" rx="0.5" fill="currentColor" />
           </svg>
         </button>
       </div>
