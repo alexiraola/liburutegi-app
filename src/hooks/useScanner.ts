@@ -4,12 +4,14 @@ import { NativeBarcodeDetector } from "@/barcode/detector.native";
 type ScannerState = {
   stream: MediaStream | null;
   error: string | null;
+  detected: boolean;
 };
 
 export default function useScanner(onDetected: (isbn: string) => void, videoRef: React.RefObject<HTMLVideoElement | null>) {
   const [state, setState] = useState<ScannerState>({
     stream: null,
     error: null,
+    detected: false,
   });
 
   const startCamera = async () => {
@@ -53,8 +55,11 @@ export default function useScanner(onDetected: (isbn: string) => void, videoRef:
   }
 
   function handleDetected(isbn: string) {
-    stopCamera();
-    onDetected(isbn);
+    setState(prevState => ({ ...prevState, detected: true }));
+    setTimeout(() => {
+      stopCamera();
+      onDetected(isbn);
+    }, 500); // Brief delay to show detection feedback
   }
 
   return {
@@ -62,5 +67,6 @@ export default function useScanner(onDetected: (isbn: string) => void, videoRef:
     stopCamera,
     stream: state.stream,
     error: state.error,
+    detected: state.detected,
   };
 }

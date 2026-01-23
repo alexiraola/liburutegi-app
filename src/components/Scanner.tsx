@@ -9,7 +9,7 @@ interface ScannerProps {
 export default function Scanner({ onDetected, onClose }: ScannerProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
-  const { startCamera, stopCamera, error, stream } = useScanner(onDetected, videoRef);
+  const { startCamera, stopCamera, error, stream, detected } = useScanner(onDetected, videoRef);
 
   useEffect(() => {
     startCamera();
@@ -26,6 +26,19 @@ export default function Scanner({ onDetected, onClose }: ScannerProps) {
   return (
     <div className="fixed inset-0 bg-black z-50">
       <div className="relative w-full h-full">
+        {/* Detection feedback overlay */}
+        {detected && (
+          <div className="absolute inset-0 bg-green-500/20 flex items-center justify-center z-10 pointer-events-none">
+            <div className="bg-green-500 rounded-full p-4 animate-pulse">
+              <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <p className="absolute bottom-1/3 text-white text-lg font-semibold animate-pulse">
+              Kodea detektatuta!
+            </p>
+          </div>
+        )}
         <video
           ref={videoRef}
           playsInline
