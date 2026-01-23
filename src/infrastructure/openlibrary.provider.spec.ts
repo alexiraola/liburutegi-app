@@ -71,7 +71,7 @@ describe('OpenLibraryProvider Integration Tests', () => {
     expect(book).not.toBeNull();
     const bookData = book!.toPrimitive();
     expect(bookData.coverImage).toBeDefined();
-    expect(bookData.coverImage).toBe('https://covers.openlibrary.org/b/id/10590366-S.jpg');
+    expect(bookData.coverImage).toBe('https://covers.openlibrary.org/b/id/10590366-M.jpg');
   });
 
   it('should have undefined cover when OpenLibrary has no cover', async () => {

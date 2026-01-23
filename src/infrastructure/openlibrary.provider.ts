@@ -12,7 +12,7 @@ export default class OpenLibraryProvider implements BookProvider {
       if (data.docs?.length) {
         const doc = data.docs[0];
         const coverImage = doc.cover_i
-          ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-S.jpg`
+          ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg`
           : undefined;
 
         return Book.create(
