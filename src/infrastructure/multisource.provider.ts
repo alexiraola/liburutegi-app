@@ -5,10 +5,15 @@ export default class MultiSourceProvider implements BookProvider {
   constructor(private readonly providers: BookProvider[]) { }
 
   async findBook(isbn: string, addedAt?: number): Promise<Book | null> {
-    for (const provider of this.providers) {
-      const book = await provider.findBook(isbn, addedAt);
-      if (book) return book;
-    }
-    return null;
+    const promises = this.providers.map(p => p.findBook(isbn, addedAt));
+    const results = await Promise.allSettled(promises);
+
+    const books = results
+      .filter((r): r is PromiseFulfilledResult<Book> => r.status === 'fulfilled' && r.value !== null)
+      .map(r => r.value);
+
+    if (books.length === 0) return null;
+
+    return books.reduce((merged, book) => merged.merge(book));
   }
 }
