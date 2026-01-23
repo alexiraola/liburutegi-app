@@ -14,7 +14,7 @@ export default function Scanner({ onDetected, onClose }: ScannerProps) {
   useEffect(() => {
     startCamera();
     return stopCamera;
-  }, [startCamera, stopCamera]);
+  }, []);
 
   useEffect(() => {
     if (stream && videoRef.current) {
@@ -32,7 +32,7 @@ export default function Scanner({ onDetected, onClose }: ScannerProps) {
           muted
           className="absolute inset-0 w-full h-full object-cover"
         />
-        
+
         {/* Scanning overlay with corner brackets */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="w-64 h-32 sm:w-80 sm:h-40 relative">
@@ -53,7 +53,7 @@ export default function Scanner({ onDetected, onClose }: ScannerProps) {
                 <p className="text-red-300 text-sm">{error}</p>
               </div>
             )}
-            
+
             <div className="text-center">
               <p className="text-white text-sm mb-2">Position barcode within the frame</p>
               <p className="text-white/70 text-xs">The scanner will detect ISBN codes automatically</p>
