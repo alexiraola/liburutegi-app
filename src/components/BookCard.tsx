@@ -37,7 +37,7 @@ export default function BookCard({ book, onDelete }: BookCardProps) {
       <div className="flex-shrink-0 flex items-center justify-between sm:gap-2">
         <button
           onClick={onDelete}
-          className="flex-shrink-0 w-10 h-10 rounded-full bg-red-100 text-red-500 hover:bg-red-200 flex items-center justify-center transition-colors ml-auto sm:mt-2 active:scale-95"
+          className="flex-shrink-0 w-10 h-10 rounded-md bg-slate-100 text-slate-600 text-lg flex items-center justify-center transition-colors ml-auto active:scale-95"
           aria-label="Delete book"
         >
           x

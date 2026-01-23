@@ -63,17 +63,17 @@ function App() {
   }
 
   const bookCount = () => {
-    if (books.length === 0) return "Ez dago libururik";
+    if (books.length === 0) return null;
     if (books.length === 1) return "Liburu bat";
     return `${books.length} liburu`;
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 pb-24 sm:pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 pb-24 sm:pb-20">
       <header className="container mx-auto px-4 py-6 sm:p-4">
         <div className="max-w-2xl mx-auto">
-          <h1 className="text-4xl font-bold text-slate-800">Nire liburutegia</h1>
-          <p className="text-slate-600 mt-1 text-base sm:text-base">Harrapatu zure liburuen kodeak eta zerrendan azalduko dira</p>
+          <h1 className="text-4xl text-center font-bold text-slate-800">Nire liburutegia</h1>
+          <p className="text-slate-600 text-center mt-1 text-base sm:text-base">Harrapatu zure liburuen kodeak eta zerrendan azalduko dira</p>
 
           <div className="mt-4 flex items-center justify-between sm:gap-4">
             <span className="text-slate-700 font-medium px-2">

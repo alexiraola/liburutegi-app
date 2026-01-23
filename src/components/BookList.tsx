@@ -13,14 +13,12 @@ export default function BookList({ books, onDelete }: BookListProps) {
         <div className="text-6xl sm:text-8xl mb-6 opacity-50">
           📚
         </div>
-        <h2 className="text-2xl font-semibold text-slate-700 mb-3 text-center sm:text-xl">
-          No books yet
-        </h2>
+        <h2 className="text-2xl font-semibold text-slate-700 mb-3 text-center sm:text-xl">Ez dago libururik</h2>
         <p className="text-slate-500 mb-8 text-center text-sm sm:text-base max-w-sm">
-          Scan your first book to get started!
+          Harrapatu lehenengo liburuaren kodea!
         </p>
         <div className="flex items-center gap-2 text-slate-400 text-sm sm:text-base">
-          <span>Tap the scan button below</span>
+          <span>Azpiko scan botoia sakatu hasteko</span>
           <span className="text-xl sm:text-2xl">⬇️</span>
         </div>
       </div>
